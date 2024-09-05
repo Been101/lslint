@@ -3,6 +3,7 @@
 import * as vscode from 'vscode'
 import {spawn} from 'child_process'
 import path from 'path'
+import fs from 'fs'
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 
@@ -24,12 +25,27 @@ function parseLinting(lslintOutput: string) {
 }
 
 // 执行 ls-lint 的函数
-function runLsLint(filePath: string) {
+function runLsLint(uri: vscode.Uri) {
+  const filePath = uri.fsPath
   // 获取 ls-lint 可执行文件的路径
-  const workspaceRoot = vscode.workspace.rootPath || ''
+  const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri)
+  if (!workspaceFolder) {
+    return
+  }
+  const workspaceRoot = workspaceFolder.uri.fsPath
   const lsLintPath = path.resolve(workspaceRoot, 'node_modules/.bin/ls-lint')
+  if (fs.existsSync(lsLintPath)) {
+    console.log('lsLintPath 文件存在')
+  } else {
+    vscode.window.showErrorMessage('请安装 @ls-lint/ls-lint')
+  }
+
   const configPath = path.resolve(workspaceRoot, '.ls-lint.yml')
-  const command = `${lsLintPath} --config ${configPath} ${filePath}`
+  if (fs.existsSync(configPath)) {
+    console.log('文件存在')
+  } else {
+    vscode.window.showErrorMessage('请添加配置文件 .ls-lint.yml')
+  }
   // 执行 ls-lint 命令
   const lsLintProcess = spawn(lsLintPath, ['--config', configPath, filePath], {
     cwd: workspaceRoot,
@@ -82,7 +98,7 @@ export default function activate(context: vscode.ExtensionContext) {
     const filePath = uri.fsPath
     let args = [] // initialize holder for our arguments
     args.push(filePath) // last argument is our file path
-    runLsLint(filePath)
+    runLsLint(uri)
   })
 
   context.subscriptions.push(watcher)
