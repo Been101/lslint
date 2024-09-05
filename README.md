@@ -22,9 +22,4 @@ Calling out known issues can help limit users opening duplicate issues against y
 
 checking file and directory names base on ` @ls-lint/ls-lint`
 
-## For more information
-
-- [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-- [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
 **Enjoy!**
