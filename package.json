@@ -2,7 +2,7 @@
   "name": "lslint-vscode",
   "displayName": "lslint",
   "description": "It is a tool for checking file and directory names, mainly used to ensure that file and directory names conform to specific naming conventions.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "engines": {
     "vscode": "^1.92.0"
   },
