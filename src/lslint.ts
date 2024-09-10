@@ -33,6 +33,7 @@ function runLsLint(uri: vscode.Uri) {
     return
   }
   const workspaceRoot = workspaceFolder.uri.fsPath
+  console.log('workspaceRoot', workspaceRoot)
   const lsLintPath = path.resolve(workspaceRoot, 'node_modules/.bin/ls-lint')
   if (fs.existsSync(lsLintPath)) {
     console.log('lsLintPath 文件存在')
@@ -93,12 +94,17 @@ function runLsLint(uri: vscode.Uri) {
 
 export default function activate(context: vscode.ExtensionContext) {
   const watcher = vscode.workspace.createFileSystemWatcher('**/*')
+  // 获取 myExtension 配置部分
+  const config = vscode.workspace.getConfiguration('lslint-vscode')
+
+  // 访问配置项 someSetting
+  const enabled = config.get<string>('enable')
+
   // 监听文件创建事件 // 可以监听创建、重命名、复制
   watcher.onDidCreate((uri) => {
-    const filePath = uri.fsPath
-    let args = [] // initialize holder for our arguments
-    args.push(filePath) // last argument is our file path
-    runLsLint(uri)
+    if (enabled) {
+      runLsLint(uri)
+    }
   })
 
   context.subscriptions.push(watcher)

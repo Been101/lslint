@@ -16,7 +16,17 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
-    "commands": []
+    "configuration": {
+      "type": "object",
+      "title": "My Extension Settings",
+      "properties": {
+        "lslint-vscode.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable lslint according to project needs"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn run package",
